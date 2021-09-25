@@ -23,13 +23,13 @@ class Candidato:
         self.fechar_janela = False
         self.list_user = []
 
-    def le_botao(self):
+    def ler_botao(self):
         self.Button, self.values = self.janela.Read()
         if self.Button == 'Salvar Dados':
             self.ExtrairDados()
         elif self.Button == 'Cadastrar':
             print("=====================")
-            print("CADASTRO")
+            print("CADASTRO REALIZADO COM SUCESSO")
             print("=====================")
             self.salvar_csv(self.list_user)
             self.list_user = []
@@ -59,7 +59,6 @@ class Candidato:
         idade = ((data_atual - nova_data_nasc).days / dias_ano)
         idade = int(idade)
 
-        # Dicionário
         user = {"Nome": Nome,
                 "Sobrenome": Sobrenome,
                 "CPF": CPF,
@@ -84,7 +83,16 @@ class Candidato:
             else:
                 print(f'{k} : {v}')
 
-    # Arquivo
+
+    def confirm_cpf(self, list_user):
+        with open('candidatos.csv', 'r') as arquivo:
+            texto = arquivo.readlines()
+        for cpf in texto:
+            if "CPF" in cpf:
+                cpf == list_user['CPF']
+                print('ERRO!! CPF já cadastrado ')
+                return
+
     def salvar_csv(self, list_user):
         if os.path.exists("candidatos.csv"):
             with open('candidatos.csv', 'a') as csvfile:
@@ -109,7 +117,7 @@ class Candidato:
 try:
     tela = Candidato()
     while 1:
-        tela.le_botao()
+        tela.ler_botao()
         if tela.fechar_janela:
             break
 
