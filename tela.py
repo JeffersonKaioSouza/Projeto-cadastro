@@ -6,16 +6,16 @@ from pyexcel.cookbook import merge_all_to_a_book
 import glob
 
 
-
-class Candidato:
+class Pessoa:
     def __init__(self):
         layout = [
-            [sg.Text('Nome',size=(10,0)), sg.Input(size=(30,0),key='Nome')],
-            [sg.Text('Sobrenome',size=(10,0)), sg.Input(size=(30,0),key='Sobrenome')],
-            [sg.Text('CPF',size=(10,0)), sg.Input(size=(30,0),key='CPF')],
-            [sg.Text('Data de Nascimento (dd/mm/aaaa)',size=(10,0)), sg.Input(size=(30,0),key='Data_de_Nascimento')],
+            [sg.Text('Nome', size=(10, 0)), sg.Input(size=(30, 0), key='Nome')],
+            [sg.Text('Sobrenome', size=(10, 0)), sg.Input(size=(30, 0), key='Sobrenome')],
+            [sg.Text('CPF', size=(10, 0)), sg.Input(size=(30, 0), key='CPF')],
+            [sg.Text('Data de Nascimento (dd/mm/aaaa)', size=(10, 0)),
+             sg.Input(size=(30, 0), key='Data_de_Nascimento')],
             [sg.Button('Salvar Dados')],
-            [sg.Output(size=(40,20))],
+            [sg.Output(size=(40, 20))],
             [sg.Button('Cadastrar')],
         ]
 
@@ -45,13 +45,14 @@ class Candidato:
         # Validação de campos vazios
         for k, v in self.values.items():
             if self.values[k] == "":
-                print(f'ERRO! Favor preencher o campo {k}')
+                print(f'ERRO! Favor preencher o campo {k}. O cliente não foi adicionado a lista.')
                 return
 
         # Validação de limite de cadastro
         if len(self.list_user) >= 3:
             print("Numero maximo candidatos Atingido. Não será cadastrado!")
             return
+
         # Calculo da idade
         nova_data_nasc = datetime.strptime(Data_de_Nascimento, '%d/%m/%Y')
         data_atual = datetime.now()
@@ -64,6 +65,11 @@ class Candidato:
                 "CPF": CPF,
                 "Data de Nascimento": Data_de_Nascimento,
                 "Idade": idade}
+
+        if self.confirm_cpf(user):
+            print("=====================")
+            print('ERRO!! CPF já cadastrado')
+            return
 
         # Adicionando campo de maior de idade
         if user['Idade'] >= 18:
@@ -83,15 +89,22 @@ class Candidato:
             else:
                 print(f'{k} : {v}')
 
-
-    def confirm_cpf(self, list_user):
-        with open('candidatos.csv', 'r') as arquivo:
-            texto = arquivo.readlines()
-        for cpf in texto:
-            if "CPF" in cpf:
-                cpf == list_user['CPF']
-                print('ERRO!! CPF já cadastrado ')
-                return
+    def confirm_cpf(self, user):
+        if os.path.exists("candidatos.csv"):
+            with open('candidatos.csv', 'r') as arquivo:
+                texto = arquivo.readlines()
+            for register_user in texto:
+                register_user = register_user.split(',')
+                try:
+                    register_user.index(user['CPF'])
+                    return True
+                except:
+                    pass
+        if len(self.list_user) > 0:
+            for user_list in self.list_user:
+                if user_list["CPF"] == user["CPF"]:
+                    return True
+        return False
 
     def salvar_csv(self, list_user):
         if os.path.exists("candidatos.csv"):
@@ -115,7 +128,7 @@ class Candidato:
 
 
 try:
-    tela = Candidato()
+    tela = Pessoa()
     while 1:
         tela.ler_botao()
         if tela.fechar_janela:
@@ -123,4 +136,3 @@ try:
 
 except Exception as e:
     print(e)
-
