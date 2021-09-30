@@ -1,9 +1,2 @@
-Nome,Sobrenome,CPF,Data de Nascimento,Idade,maior_de_idade
-Jefferson,Souza,123456789,23/05/1991,30,true
-1,2,3,23/05/1991,30,true
-Jefferson,souza,123,23/05/1991,30,true
-Jessica,souza,123,23/05/1991,30,true
-1,2,3,23/05/1991,30,true
-1,2,3,23/05/1991,30,true
-Jefferson,SOuza,1522728282,23/05/1991,30,true
-Rosene,SOuza,1522728282,23/05/1992,29,true
+Nome,Sobrenome,CPF,Data de Nascimento,Idade,maior_de_idade,vaga
+1,2,3,23/05/1991,30,true,1
